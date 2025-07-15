@@ -1,50 +1,60 @@
-# Aave V2 Wallet Credit Scoring
 
-This project presents a data-driven method to evaluate the creditworthiness of wallets interacting with the Aave V2 protocol. Using historical transaction-level data, we assign a credit score between **0 and 1000** for each wallet, with higher scores indicating responsible and reliable usage.
+# 📊 Aave V2 Wallet Credit Scoring
+
+This project presents a transparent and data-driven method to evaluate the creditworthiness of wallets interacting with the Aave V2 protocol. Using historical transaction-level data, we assign a **credit score between 0 and 1000** to each wallet — where higher scores reflect more responsible and reliable DeFi behavior.
 
 ---
 
 ## 🎯 Objective
 
-- Analyze raw Aave transaction data
-- Engineer wallet behavior features
-- Score wallets using a rule-based logic
-- Generate a one-step script for scoring any transaction log
+- Analyze raw Aave V2 transaction data
+- Engineer meaningful features from wallet behavior
+- Score wallets using a rule-based model
+- Deliver a **one-step script** to score any dataset
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Architecture & Folder Structure
 
 ```
 aave-credit-score/
 ├── src/
-│   └── score_wallets.py         # Main scoring script
-├── wallet_scores_final.csv      # Output credit scores
-├── wallet_scores_final.png      # Score distribution chart
-├── README.md                    # Project overview and method
-├── analysis.md                  # Score analysis
-├── requirements.txt             # Python dependencies
+│   └── score_wallets.py         # 🔁 One-step scoring script
+├── wallet_scores_final.csv      # 📄 Output credit scores
+├── wallet_scores_final.png      # 📊 Score distribution chart
+├── README.md                    # 📘 Project overview
+├── analysis.md                  # 📈 Score behavior breakdown
+├── requirements.txt             # 📦 Python dependencies
 ```
 
 ---
 
-## ⚙️ Feature Engineering
+## ⚙️ Processing Flow
 
-The script extracts and computes the following wallet-level features:
-
-| Feature         | Description                                           |
-|----------------|-------------------------------------------------------|
-| `total_txns`    | Number of actions by the wallet                      |
-| `active_days`   | Unique days of activity                              |
-| `repay_ratio`   | repay actions / borrow actions                       |
-| `redeem_ratio`  | redeem actions / deposit actions                     |
-| `liquid_rate`   | liquidation events / total actions                   |
+1. Load raw JSON transaction data
+2. Extract wallet-level actions (`deposit`, `repay`, `liquidate`, etc.)
+3. Compute features like repay ratio, redeem ratio, active days
+4. Score each wallet using a weighted rule-based formula
+5. Normalize scores between 0–1000 using `MinMaxScaler`
+6. Output CSV + visualization
 
 ---
 
-## 📊 Scoring Formula
+## ✨ Features Engineered
 
-A simple weighted scoring logic is used:
+| Feature         | Description                                           |
+|----------------|-------------------------------------------------------|
+| `total_txns`    | Total transactions by the wallet                     |
+| `active_days`   | Number of unique active days                         |
+| `repay_ratio`   | Ratio of repay to borrow transactions                |
+| `redeem_ratio`  | Ratio of redeem to deposit transactions              |
+| `liquid_rate`   | Ratio of liquidations to total transactions          |
+
+---
+
+## 🧮 Scoring Logic
+
+A simple weighted scoring formula is applied:
 
 ```python
 score_raw = (
@@ -55,47 +65,29 @@ score_raw = (
 )
 ```
 
-Then it's scaled to the 0–1000 range using `MinMaxScaler`.
+Scores are scaled to a range of 0–1000 using `MinMaxScaler`.
 
 ---
 
 ## ▶️ How to Run
 
-Install dependencies:
-
+### 1. Install Dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the script:
-
+### 2. Run the Script:
 ```bash
-python src/score_wallets.py \
-  --input user-transactions.json \
-  --output wallet_scores_final.csv
+python src/score_wallets.py   --input user-transactions.json   --output wallet_scores_final.csv
 ```
 
-This generates:
-- `wallet_scores_final.csv`: wallet scores
-- `wallet_scores_final.png`: score distribution chart
+### Output:
+- `wallet_scores_final.csv`: Final wallet credit scores
+- `wallet_scores_final.png`: Credit score distribution plot
 
 ---
 
-## 📈 Example Output
-
-**wallet_scores_final.csv**
-
-| wallet                                  | credit_score |
-|-----------------------------------------|--------------|
-| 0x000...d4b6                            | 5.50         |
-| 0x000...e2dc                            | 5.56         |
-| ...                                     | ...          |
-
-**wallet_scores_final.png** – Histogram of credit score distribution
-
----
-
-## 🔍 Score Ranges
+## 🔍 Score Interpretation
 
 | Score Range  | Meaning                         |
 |--------------|----------------------------------|
@@ -104,21 +96,21 @@ This generates:
 | 400–700      | Consistent and healthy behavior |
 | 700–1000     | Reliable and responsible users  |
 
-Detailed insights available in `analysis.md`.
+> Details with charts available in `analysis.md`
 
 ---
 
 ## 🗃️ Data Source
 
-The dataset used is a raw Aave V2 transaction-level JSON file:
+We use real raw transaction-level Aave V2 data:
 
-- Raw JSON (~87MB): [Download](https://drive.google.com/file/d/1ISFbAXxadMrt7Zl96rmzzZmEKZnyW7FS/view?usp=sharing)
+- JSON (~87MB): [Download](https://drive.google.com/file/d/1ISFbAXxadMrt7Zl96rmzzZmEKZnyW7FS/view?usp=sharing)
 - Zipped (~10MB): [Download](https://drive.google.com/file/d/14ceBCLQ-BTcydDrFJauVA_PKAZ7VtDor/view?usp=sharing)
 
 ---
 
-## 💡 Future Improvements
+## 💡 Future Work
 
-- Time-decay weighting on recent transactions
-- Normalization by token value
-- ML-based model instead of rule-based logic
+- Time-decay weighting on recent behavior
+- Token value normalization
+- ML-based credit model
